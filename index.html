@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu Maker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#e67e22">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MenuCraft">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+</head>
+<body>
+    <!-- Page 1: Menu Builder -->
+    <div id="builder-page" class="page active">
+        <header class="builder-header">
+            <div class="logo">
+                <span class="logo-icon">🍽️</span>
+                <h1>Menu<span>Craft</span></h1>
+                <p class="tagline">Create Beautiful Restaurant Menus</p>
+            </div>
+        </header>
+
+        <main class="builder-main">
+            <!-- Restaurant Info Section -->
+            <section class="section restaurant-info-section">
+                <h2 class="section-title"><span class="step-number">1</span> Restaurant Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="restaurant-name">Restaurant Name *</label>
+                        <input type="text" id="restaurant-name" placeholder="e.g., The Golden Fork" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="restaurant-tagline">Tagline / Subtitle</label>
+                        <input type="text" id="restaurant-tagline" placeholder="e.g., Fine Dining Since 1985">
+                    </div>
+                    <div class="form-group">
+                        <label for="restaurant-address">Address</label>
+                        <input type="text" id="restaurant-address" placeholder="e.g., 123 Main Street, New York">
+                    </div>
+                    <div class="form-group">
+                        <label for="restaurant-phone">Phone</label>
+                        <input type="text" id="restaurant-phone" placeholder="e.g., (555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="currency-symbol">Currency Symbol</label>
+                        <select id="currency-symbol">
+                            <option value="$">$ (Dollar)</option>
+                            <option value="€">€ (Euro)</option>
+                            <option value="£">£ (Pound)</option>
+                            <option value="₹">₹ (Rupee)</option>
+                            <option value="¥">¥ (Yen)</option>
+                            <option value="₱">₱ (Peso)</option>
+                            <option value="R">R (Rand)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="menu-theme">Menu Theme</label>
+                        <select id="menu-theme">
+                            <option value="classic">🎩 Classic Elegant</option>
+                            <option value="modern">✨ Modern Minimal</option>
+                            <option value="rustic">🪵 Rustic Charm</option>
+                            <option value="dark">🌙 Dark Luxury</option>
+                            <option value="colorful">🌈 Colorful Vibrant</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="section categories-section">
+                <h2 class="section-title"><span class="step-number">2</span> Menu Categories & Items</h2>
+                
+                <div id="categories-container">
+                    <!-- Categories will be added here -->
+                </div>
+
+                <button class="btn btn-add-category" id="add-category-btn">
+                    <span class="btn-icon">➕</span> Add New Category
+                </button>
+            </section>
+
+            <!-- Calculator Section -->
+            <section class="section calculator-section">
+                <h2 class="section-title"><span class="step-number">💰</span> Price Calculator</h2>
+                <div class="calculator-card">
+                    <div class="calculator-row">
+                        <label>Cost Percentage:</label>
+                        <input type="number" id="cost-percentage" value="30" min="1" max="100">
+                        <span>%</span>
+                    </div>
+                    <div class="calculator-row">
+                        <label>Item Cost:</label>
+                        <input type="number" id="item-cost" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                    <div class="calculator-result">
+                        <strong>Suggested Price:</strong>
+                        <span id="suggested-price" class="suggested-price">$0.00</span>
+                    </div>
+                    <p class="calculator-note">💡 Tip: Industry standard is 25-35% food cost</p>
+                </div>
+            </section>
+
+            <!-- Make Menu Button -->
+            <section class="section make-menu-section">
+                <h2 class="section-title"><span class="step-number">3</span> Generate Your Menu</h2>
+                <div class="make-menu-container">
+                    <p class="make-menu-info">
+                        <span class="info-icon">ℹ️</span>
+                        You've added <strong id="total-categories-count">0</strong> categories and 
+                        <strong id="total-items-count">0</strong> items so far.
+                    </p>
+                    <button class="btn btn-make-menu" id="make-menu-btn">
+                        <span class="btn-icon">🚀</span> Make My Menu!
+                    </button>
+                    <button class="btn" id="load-demo-btn" style="background: var(--secondary); color: white; margin-top: 15px; font-size: 0.9rem;">
+                        <span class="btn-icon">📝</span> Load Demo Menu
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Page 2: Menu Preview -->
+    <div id="preview-page" class="page">
+        <div class="preview-toolbar">
+            <button class="btn btn-back" id="back-btn">
+                <span>←</span> Back to Editor
+            </button>
+            <div class="toolbar-actions">
+                <button class="btn btn-print" id="print-btn">
+                    <span>🖨️</span> Print Menu
+                </button>
+                <button class="btn btn-download" id="download-btn">
+                    <span>📥</span> Download PDF
+                </button>
+            </div>
+        </div>
+
+        <div id="menu-preview-container">
+            <!-- Generated menu will appear here -->
+        </div>
+    </div>
+
+    <!-- Floating Toolbar -->
+    <div class="floating-toolbar" id="floating-toolbar">
+        <button class="toolbar-btn" id="save-menu-btn" title="Save Menu">
+            <span>💾</span>
+        </button>
+        <button class="toolbar-btn" id="load-menu-btn" title="Load Saved Menu">
+            <span>📂</span>
+        </button>
+        <button class="toolbar-btn" id="export-json-btn" title="Export as JSON">
+            <span>📦</span>
+        </button>
+        <button class="toolbar-btn" id="import-json-btn" title="Import JSON">
+            <span>📥</span>
+        </button>
+        <button class="toolbar-btn" id="stats-btn" title="View Statistics">
+            <span>📊</span>
+        </button>
+        <button class="toolbar-btn" id="clear-all-btn" title="Clear All">
+            <span>🗑️</span>
+        </button>
+        <button class="toolbar-btn" id="help-btn" title="Keyboard Shortcuts">
+            <span>❓</span>
+        </button>
+    </div>
+
+    <!-- Template for Category -->
+    <template id="category-template">
+        <div class="category-card" data-category-id="" draggable="true">
+            <div class="category-header">
+                <div class="category-header-left">
+                    <span class="drag-handle">⠿</span>
+                    <div class="category-icon-picker">
+                        <button class="icon-btn current-icon" title="Pick icon">🍴</button>
+                        <div class="icon-dropdown hidden">
+                            <span data-icon="🍴">🍴</span>
+                            <span data-icon="🥗">🥗</span>
+                            <span data-icon="🍕">🍕</span>
+                            <span data-icon="🍔">🍔</span>
+                            <span data-icon="🥩">🥩</span>
+                            <span data-icon="🍣">🍣</span>
+                            <span data-icon="🍝">🍝</span>
+                            <span data-icon="🥘">🥘</span>
+                            <span data-icon="🍰">🍰</span>
+                            <span data-icon="🍦">🍦</span>
+                            <span data-icon="☕">☕</span>
+                            <span data-icon="🥤">🥤</span>
+                            <span data-icon="🍷">🍷</span>
+                            <span data-icon="🍺">🍺</span>
+                            <span data-icon="🍹">🍹</span>
+                            <span data-icon="🫖">🫖</span>
+                            <span data-icon="🧁">🧁</span>
+                            <span data-icon="🥐">🥐</span>
+                            <span data-icon="🌮">🌮</span>
+                            <span data-icon="🍜">🍜</span>
+                        </div>
+                    </div>
+                    <input type="text" class="category-name-input" placeholder="Category Name (e.g., Appetizers)">
+                </div>
+                <div class="category-header-right">
+                    <span class="item-count-badge">0 items</span>
+                    <button class="btn-icon-action btn-duplicate-category" title="Duplicate">📋</button>
+                    <button class="btn-icon-action btn-collapse" title="Collapse">▼</button>
+                    <button class="btn-icon-action btn-delete-category" title="Delete Category">🗑️</button>
+                </div>
+            </div>
+            <div class="category-description">
+                <input type="text" class="category-desc-input" placeholder="Category description (optional)">
+            </div>
+            <div class="category-body">
+                <div class="items-list">
+                    <!-- Items go here -->
+                </div>
+                <button class="btn btn-add-item">
+                    <span class="btn-icon">+</span> Add Item
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template for Item -->
+    <template id="item-template">
+        <div class="item-card" data-item-id="">
+            <div class="item-row">
+                <div class="item-main">
+                    <input type="text" class="item-name-input" placeholder="Item name">
+                    <input type="text" class="item-desc-input" placeholder="Description (optional)">
+                </div>
+                <div class="item-pricing">
+                    <div class="price-input-wrapper">
+                        <span class="currency-label">$</span>
+                        <input type="number" class="item-price-input" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                </div>
+                <div class="item-tags">
+                    <label class="tag-checkbox" title="Vegetarian">
+                        <input type="checkbox" class="tag-veg"> 🌱
+                    </label>
+                    <label class="tag-checkbox" title="Spicy">
+                        <input type="checkbox" class="tag-spicy"> 🌶️
+                    </label>
+                    <label class="tag-checkbox" title="Popular">
+                        <input type="checkbox" class="tag-popular"> ⭐
+                    </label>
+                    <label class="tag-checkbox" title="New">
+                        <input type="checkbox" class="tag-new"> 🆕
+                    </label>
+                </div>
+                <button class="btn-icon-action btn-delete-item" title="Delete Item">✕</button>
+            </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
